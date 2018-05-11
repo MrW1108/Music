@@ -1,0 +1,40 @@
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:background="#00ffffff"
+    android:padding="@dimen/widget_margin">
+    <TextView
+        android:text="弦上有春秋"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/widget_music_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/widget_last_music"
+            android:background="@drawable/ic_last_music"
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
+        <Button
+            android:id="@+id/widget_music_play"
+            android:layout_marginHorizontal="50dp"
+            android:background="@drawable/ic_playing"
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
+        <Button
+            android:id="@+id/widget_next_music"
+            android:background="@drawable/ic_next"
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
+
+    </LinearLayout>
+
+</LinearLayout>
