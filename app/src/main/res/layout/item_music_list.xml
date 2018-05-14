@@ -1,28 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="56dp"
     android:gravity="center_vertical"
     android:layout_gravity="center_vertical"
     android:orientation="vertical"
     >
 
-    <TextView
-        android:text="故梦"
-        android:id="@+id/music_name"
+    <ImageView
+        android:id="@+id/music_album_pic"
+        android:background="#ff0"
+        android:layout_width="48dp"
+        android:layout_height="48dp" />
+    <LinearLayout
+        android:layout_toRightOf="@id/music_album_pic"
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textColor="#000"
-        />
-    <TextView
-        android:id="@+id/music_singer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/music_name"
-        android:text="墨明棋妙"
-        android:textSize="12sp"
-         />
+        android:layout_toEndOf="@id/music_album_pic"
+        android:layout_marginStart="10dp">
+        <TextView
+            android:id="@+id/music_name"
+            android:text="BBB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#000"
+            />
+        <TextView
+            android:id="@+id/music_singer"
+            android:text="AAA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            />
+    </LinearLayout>
+
 
 
 

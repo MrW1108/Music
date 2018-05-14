@@ -2,6 +2,7 @@ package com.example.y.study;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -12,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatSeekBar;
@@ -26,15 +28,25 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.y.study.adapter.MusicAdapter;
 import com.example.y.study.myclass.MyMusic;
+
 import org.litepal.crud.DataSupport;
+import org.litepal.tablemanager.Connector;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener {
+
+    private boolean isPlaying = false;
+    public static final String PLAY_MUSIC = "play_music";
+    public static final String PAUSE_MUSIC = "pause_music";
+    public static final String STOP_MUSIC = "stop_music";
+
 
     private MediaPlayer mediaPlayer;
     private MusicAdapter musicAdapter;//recyclerView的适配器，用于显示音乐列表
@@ -62,9 +74,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         requestPermission();//获取权限，6.0之后读文件被设为危险权限，需要运行时请求
         initView();
-       // Connector.getDatabase();
-        //queryMusicFromDataBase();
-        queryMusic();
+        Connector.getDatabase();
+        queryMusicFromDataBase();
     }
 
     private void requestPermission() {
@@ -72,6 +83,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        queryMusicFromDataBase();
     }
 
     @Override
@@ -92,11 +110,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.refresh:
-                //queryMusic();
-                break;
-        }
+        Intent intent = new Intent(this, AddMusicActivity.class);
+        startActivity(intent);
         return true;
     }
 
@@ -110,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initView() {
-        Toolbar toolbar=findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         timeStart = findViewById(R.id.time_start);
@@ -140,35 +155,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 changeMusic(position);
             }
         });
+
+        musicAdapter.setOnLongItemClickListener(new MusicAdapter.OnLongItemClickListener() {
+            @Override
+            public void onLongItemClick(View v, final int position) {
+                new AlertDialog.Builder(MainActivity.this).setTitle("确认移除该歌曲？")
+                        .setNegativeButton("取消", null)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                musicList.get(position).delete();
+                                musicList.remove(position);
+                                musicAdapter.notifyDataSetChanged();
+                            }
+                        })
+                        .create()
+                        .show();
+
+            }
+        });
         musicListView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
     }
 
-
-    private void queryMusic() {
-        //通过Cursor找出本地音乐文件（MP3）
-        @SuppressLint("Recycle") Cursor cursor = getContentResolver().query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null,
-                MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
-        if (cursor != null) {
-
-            while (cursor.moveToNext()) {
-                //从属性名很容易看出所代表的音乐文件属性，所以一下属性不做讲解了
-                String id = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
-                String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
-                String singer = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
-                String album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
-                String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
-                int time = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
-                int size = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE));
-                //myMusic是我自己定义的一个javaBean，用来存放音乐文件
-                MyMusic myMusic = new MyMusic(id, title, singer, path, size, time, album);
-                //myMusic.save();//存数据库
-                 musicList.add(myMusic);
-            }
-            musicAdapter.notifyDataSetChanged();
-        }
-        //queryMusicFromDataBase();
-    }
 
     private void queryMusicFromDataBase() {
         musicList.clear();
@@ -183,14 +191,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void playMusic(String url,int position){
-        Intent playIntent=new Intent(this,MusicService.class);
-        playIntent.putExtra("url",url);
-        playIntent.putExtra("position",position);
+    private void playMusic(String url, int position) {
+        Intent playIntent = new Intent(this, MusicService.class);
+        playIntent.putExtra("url", url);
+        playIntent.putExtra("position", position);
+        playIntent.putExtra("msg", PLAY_MUSIC);
         startService(playIntent);
+        isPlaying = true;
     }
 
-    
 
     //音乐播放
     private void playMusic(MyMusic myMusic) {
@@ -228,6 +237,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             playMusic(musicList.get(0));
         } else {
             playMusic(musicList.get(position));
+            mPosition = position;
         }
         musicAdapter.setSelected(mPosition);    //设置选中音乐
 
@@ -238,6 +248,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void startOrPause() {   //播放或暂停逻辑实现
+        /*if (isPlaying) {
+            playB.setBackgroundResource(R.drawable.ic_pause);
+            Intent pauseIntent = new Intent(this, MusicService.class);
+            pauseIntent.putExtra("msg", PAUSE_MUSIC);
+            startService(pauseIntent);
+            isPlaying = false;
+
+        } else {
+            playB.setBackgroundResource(R.drawable.ic_playing);
+            Intent playIntent = new Intent(this, MusicService.class);
+            playIntent.putExtra("msg", PLAY_MUSIC);
+            startService(playIntent);
+            isPlaying = true;
+        }*/
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
             playB.setBackgroundResource(R.drawable.ic_pause);
@@ -245,28 +269,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             mediaPlayer.start();
             playB.setBackgroundResource(R.drawable.ic_playing);
+
         }
     }
 
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.last_music:   //上一首
-                changeMusic(--mPosition);
-                break;
-            case R.id.music_play:   //播放/暂停
-                if (mediaPlayer == null) {
-                    changeMusic(0);
-                    mPosition = 0;
-                } else {
-                    startOrPause();
-                }
-                break;
-            case R.id.next_music://下一首
-                changeMusic(++mPosition);
-                break;
-        }
+        if (musicList.size() != 0)
+            switch (view.getId()) {
+                case R.id.last_music:   //上一首
+                    changeMusic(--mPosition);
+                    break;
+                case R.id.music_play:   //播放/暂停
+                    if (mediaPlayer == null) {
+                        changeMusic(0);
+                        mPosition = 0;
+                    } else {
+                        startOrPause();
+                    }
+                    break;
+                case R.id.next_music://下一首
+                    changeMusic(++mPosition);
+                    break;
+            }
+        else
+            Toast.makeText(this, "请先添加歌曲！", Toast.LENGTH_SHORT).show();
     }
 
     //下面三个方法是OnSeekBarChangeListener需重写的方法，此处只需重写第三个

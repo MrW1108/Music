@@ -2,4 +2,6 @@
     <string name="app_name">Study</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="add_music_title">完成</string>
+    <string name="music_playing_text">播放</string>
 </resources>

@@ -2,10 +2,13 @@ package com.example.y.study.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,7 +20,18 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> 
     private int selected;
     private List<MyMusic> musicList;
     private OnItemClickListener onItemClickListener;
+    private OnLongItemClickListener onLongItemClickListener;
     private Context mContext;
+
+    public interface OnLongItemClickListener{
+        void onLongItemClick(View v,int position);
+    }
+
+    public void setOnLongItemClickListener(OnLongItemClickListener onLongItemClickListener) {
+        this.onLongItemClickListener = onLongItemClickListener;
+    }
+
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -25,9 +39,18 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> 
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_music_content, parent, false);
         ViewHolder holder = new ViewHolder(view);
         view.setOnClickListener(this);
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (onLongItemClickListener!=null)
+                    onLongItemClickListener.onLongItemClick(v, (Integer) v.getTag());
+                return true;
+            }
+        });
         return holder;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
@@ -41,6 +64,9 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> 
             holder.content.addView(addNormalView());
             TextView musicName=holder.content.findViewById(R.id.music_name);
             TextView musicSinger=holder.content.findViewById(R.id.music_singer);
+            ImageView musicAlbumPic=holder.content.findViewById(R.id.music_album_pic);
+            /*musicAlbumPic.setBackground(music.getAlbumPic());
+            musicAlbumPic.setScaleType(ImageView.ScaleType.CENTER_CROP);*/
             musicName.setText(music.getMusicName());
             musicSinger.setText(music.getSinger());
         }
