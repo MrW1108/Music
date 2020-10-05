@@ -38,6 +38,7 @@ import org.litepal.tablemanager.Connector;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener {
@@ -47,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String PAUSE_MUSIC = "pause_music";
     public static final String STOP_MUSIC = "stop_music";
 
-
     private MediaPlayer mediaPlayer;
     private MusicAdapter musicAdapter;//recyclerView的适配器，用于显示音乐列表
     private List<MyMusic> musicList;
@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView timeStart, timeEnd;
     private int mPosition = -1;//定位当前播放的音乐
     private Button playB;//播放、暂停Button
+    private int flag = 0; // 0为循环播放，1为随机播放
 
 
     @SuppressLint("HandlerLeak")
@@ -72,6 +73,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Button btShuffle = findViewById(R.id.shuffle);
+        Button btLoop = findViewById(R.id.loop);
+        btShuffle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                flag = 1; //随机
+                Toast.makeText(MainActivity.this, "随机播放", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btLoop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                flag = 0; //循环
+                Toast.makeText(MainActivity.this, "按序循环播放", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         requestPermission();//获取权限，6.0之后读文件被设为危险权限，需要运行时请求
         initView();
         Connector.getDatabase();
@@ -314,7 +334,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     @Override
-    public void onCompletion(MediaPlayer mediaPlayer) { //OnCompletionListener 重写方法，实现轮播效果
-        changeMusic(++mPosition);
+    public void onCompletion(MediaPlayer mediaPlayer) { //OnCompletionListener 重写方法，实现循环播放和随机播放
+        if(flag==0)
+            changeMusic(++mPosition);
+        if(flag==1) {
+            int now = mPosition;
+            do {
+                mPosition = new Random().nextInt(musicList.size() - 1);
+            }while(mPosition!=now);
+            changeMusic(mPosition);
+        }
     }
+
 }
