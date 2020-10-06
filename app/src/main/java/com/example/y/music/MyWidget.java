@@ -1,6 +1,5 @@
-package com.example.y.study;
+package com.example.y.music;
 
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;

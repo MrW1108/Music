@@ -1,4 +1,4 @@
-package com.example.y.study;
+package com.example.y.music;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

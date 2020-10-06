@@ -1,15 +1,13 @@
-package com.example.y.study;
+package com.example.y.music;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -29,8 +27,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.y.study.adapter.MusicAdapter;
-import com.example.y.study.myclass.MyMusic;
+import com.example.y.music.adapter.MusicAdapter;
+import com.example.y.music.myclass.MyMusic;
 
 import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
@@ -341,7 +339,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             int now = mPosition;
             do {
                 mPosition = new Random().nextInt(musicList.size() - 1);
-            }while(mPosition!=now);
+            }while(mPosition==now);
             changeMusic(mPosition);
         }
     }

@@ -1,4 +1,4 @@
-package com.example.y.study.myview;
+package com.example.y.music.myview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

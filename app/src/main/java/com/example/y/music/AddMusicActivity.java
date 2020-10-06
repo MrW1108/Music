@@ -1,4 +1,4 @@
-package com.example.y.study;
+package com.example.y.music;
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
@@ -13,12 +13,11 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.y.study.adapter.CheckMusicAdapter;
-import com.example.y.study.myclass.MyMusic;
+import com.example.y.music.adapter.CheckMusicAdapter;
+import com.example.y.music.myclass.MyMusic;
 
 import java.util.ArrayList;
 import java.util.List;

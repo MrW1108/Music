@@ -3,6 +3,6 @@
     <dbname value="MusicStore"/>
     <version value="1"/>
     <list>
-        <mapping class="com.example.y.study.myclass.MyMusic"/>
+        <mapping class="com.example.y.music.myclass.MyMusic"/>
     </list>
 </litepal>

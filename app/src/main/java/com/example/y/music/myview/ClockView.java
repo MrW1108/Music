@@ -1,4 +1,4 @@
-package com.example.y.study.myview;
+package com.example.y.music.myview;
 
 import android.content.Context;
 import android.graphics.Canvas;

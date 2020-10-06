@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.y.study">
+    package="com.example.y.music">
 
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="com.example.y.music.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".MyWidget">
+        <receiver android:name="com.example.y.music.MyWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -35,11 +35,11 @@
         </receiver>
 
         <service
-            android:name=".MusicService"
+            android:name="com.example.y.music.MusicService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".AddMusicActivity"></activity>
+        <activity android:name="com.example.y.music.AddMusicActivity"></activity>
     </application>
 
 </manifest>

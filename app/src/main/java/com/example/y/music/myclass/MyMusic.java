@@ -1,4 +1,4 @@
-package com.example.y.study.myclass;
+package com.example.y.music.myclass;
 
 import android.graphics.drawable.BitmapDrawable;
 

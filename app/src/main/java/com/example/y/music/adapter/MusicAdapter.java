@@ -1,4 +1,4 @@
-package com.example.y.study.adapter;
+package com.example.y.music.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -12,8 +12,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.y.study.myclass.MyMusic;
-import com.example.y.study.R;
+import com.example.y.music.myclass.MyMusic;
+import com.example.y.music.R;
 import java.util.List;
 
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> implements View.OnClickListener {

@@ -1,4 +1,4 @@
-package com.example.y.study.adapter;
+package com.example.y.music.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.example.y.study.R;
-import com.example.y.study.myclass.MyMusic;
+import com.example.y.music.R;
+import com.example.y.music.myclass.MyMusic;
 
 import java.util.List;
 
